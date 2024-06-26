@@ -1,0 +1,72 @@
+{% extends "app/base.html" %}
+{% block title %}Cart | Wesell{% endblock title %}
+{% block main-content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4">Your Cart</h1>
+    {% if cart_items %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td><img src="{{ item.product.product_image.url }}" alt="{{ item.product.title }}" style="max-width: 100px;"></td>
+                    <td>{{ item.product.title }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'adjust_quantity' item.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="item_id" value="{{ item.id }}">
+                            <button type="submit" name="action" value="decrease" class="btn btn-sm btn-outline-primary"><i class="fa fa-minus"></i></button>
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm d-inline-block quantity-field" style="width: 60px;">
+                            <button type="submit" name="action" value="increase" class="btn btn-sm btn-outline-primary"><i class="fa fa-plus"></i></button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" action="{% url 'update_size' item.id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="item_id" value="{{ item.id }}">
+                            <select name="size" onchange="this.form.submit()" class="form-select form-select-sm">
+                                {% for size in SIZE_CHOICES %}
+                                    <option value="{{ size.0 }}" {% if item.size == size.0 %}selected{% endif %}>{{ size.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </td>
+                    <td>₹{{ item.product.discount_price }}</td>
+                    <td>₹{{ item.total_price }}</td>
+                    <td>
+                        <form action="{% url 'remove_from_cart' item.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="5" class="text-end"><strong>Total:</strong></td>
+                    <td>₹{{ total_price }}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <a href="{% url 'checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
+    </div>
+    {% else %}
+    <div class="text-center">
+        <p class="fs-5 text-muted">Your cart is empty.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock main-content %}

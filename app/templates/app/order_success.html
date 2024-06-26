@@ -1,0 +1,32 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block title %}Order Success{% endblock title %}
+
+{% block main-content %}
+<div class="container">
+    <h1>Your Order Has Been Placed Successfully!</h1>
+    <h2>Order Details</h2>
+    <p>Order ID: {{ order.id }}</p>
+    <p>Total Price: ₹{{ total_price }}</p>
+
+    <h2>Ordered Items</h2>
+    <ul>
+        {% for item in order_items %}
+        <li>{{ item.product.title }} - {{ item.quantity }} x ₹{{ item.product.discount_price }}</li>
+        {% endfor %}
+    </ul>
+
+    <div class="shipping-info">
+        <h2>Shipping Information</h2>
+        {% if customer %}
+            <p>Name: {{ customer.name }}</p>
+            <p>Locality: {{ customer.locality }}</p>
+            <p>City: {{ customer.city }}</p>
+            <!-- Include other customer information fields as needed -->
+        {% else %}
+            <p>No shipping information available.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock main-content %}

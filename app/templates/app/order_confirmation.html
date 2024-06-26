@@ -1,0 +1,23 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block title %}Order Confirmation{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1>Order Confirmation</h1>
+    <p>Your order has been successfully placed.</p>
+    <h2>Order Details</h2>
+    <p>Order ID: {{ order.id }}</p>
+    <p>Total Price: {{ order.total_price }}</p>
+    <h3>Items Ordered</h3>
+    <ul>
+        {% for item in order.items.all %}
+            <li>{{ item.quantity }} x {{ item.product.name }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Shipping Information</h3>
+    <p>{{ order.shipping_info }}</p>
+    <!-- Add more order details as needed -->
+</div>
+{% endblock content %}

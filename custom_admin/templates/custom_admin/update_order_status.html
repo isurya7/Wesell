@@ -1,0 +1,15 @@
+{% extends 'custom_admin/base.html' %}
+
+{% block content %}
+<h1>Update Order Status</h1>
+<form method="POST">
+    {% csrf_token %}
+    <label for="order_status">Order Status:</label>
+    <select name="order_status" id="order_status">
+        {% for state in order._meta.get_field('order_state').choices %}
+        <option value="{{ state.0 }}" {% if order.order_state == state.0 %}selected{% endif %}>{{ state.1 }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Update Status</button>
+</form>
+{% endblock %}

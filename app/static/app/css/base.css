@@ -1,0 +1,72 @@
+/* Styling the footer */
+footer {
+  background-color: #333; /* Dark background color */
+  color: #fff; /* Text color */
+  padding: 50px 0; /* Padding for top and bottom */
+}
+
+/* Styling the container */
+.container {
+  width: 80%; /* Adjust width as needed */
+  margin: 0 auto; /* Center the container */
+}
+
+/* Styling footer sections */
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Styling company logo */
+.footer-section img {
+  width: 150px; /* Adjust image width as needed */
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* Styling contact information */
+.footer-section h3 {
+  font-size: 18px; /* Adjust font size as needed */
+  margin-bottom: 10px; /* Space between heading and content */
+}
+
+/* Styling social media links */
+.social-links {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0; /* Remove default padding */
+}
+
+.social-links li {
+  display: inline-block; /* Display links horizontally */
+  margin-right: 10px; /* Space between links */
+}
+
+.social-links li a {
+  color: #fff; /* Text color for social media links */
+  text-decoration: none; /* Remove underline */
+}
+
+/* Hover effect for social media links */
+.social-links li a:hover {
+  text-decoration: underline; /* Add underline on hover */
+}
+
+/* Media query for screens smaller than 768px */
+@media (max-width: 767px) {
+  .container {
+    width: 90%; /* Adjust container width for smaller screens */
+  }
+
+  .footer-content {
+    flex-direction: column; /* Stack footer sections vertically */
+    align-items: center; /* Center footer sections */
+  }
+
+  .footer-section {
+    margin-bottom: 20px; /* Add space between footer sections */
+    text-align: center; /* Center text content */
+  }
+
+  .footer-section img {
+    width: 120px; /* Reduce image width for smaller screens */
+  }
+}

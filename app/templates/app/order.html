@@ -1,0 +1,96 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block title %}Order | Wesell{% endblock %}
+
+{% block main-content %}
+<style>
+    .center-heading {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .product-image {
+        width: 50px; /* Adjust size as needed */
+        height: auto;
+        margin-right: 20px;
+    }
+
+    .card-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+
+    .order-details {
+        display: none;
+    }
+
+    .order-details.show {
+        display: block;
+    }
+
+    .show-less-btn {
+        margin-top: 10px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .show-less-btn:hover {
+        background-color: #c82333;
+    }
+</style>
+
+<h1 class="center-heading">Order List</h1>
+
+<div class="card-container">
+    {% for order in orders %}
+    <div class="card">
+        <img src="{{ order.product.product_image.url }}" alt="Product Image" class="product-image">
+        <h5 class="card-title" onclick="toggleOrderDetails('{{ order.order_id }}')">
+            {{ order.product.title }}
+        </h5>
+        <div class="order-details" id="order-details-{{ order.order_id }}">
+            <p><strong>Order ID:</strong> {{ order.order_id }}</p>
+            <p><strong>Product:</strong> {{ order.product.title }}</p>
+            <p><strong>Size:</strong> {{ order.size }}</p>
+            <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+            <p><strong>User:</strong> {{ order.user.username }}</p>
+            <p><strong>Number:</strong> {{ order.number }}</p>
+            <p><strong>Address:</strong> {{ order.address }}</p>
+            <p><strong>Pincode:</strong> {{ order.pincode }}</p>
+            <p><strong>State:</strong> {{ order.state }}</p>
+            <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+            <p><strong>Order recived at:</strong> {{ order.added_at }}</p>
+            <p><strong>Order State:</strong> {{ order.order_state }}</p>
+            <p><strong>Note: Order cannot be canceled once it is shipped.</strong></p>
+            {% if order.order_state != 'cancelled' and order.order_state != 'shipped' %}
+                <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger">Cancel Order</a>
+            {% endif %}
+            <button class="show-less-btn" onclick="toggleOrderDetails('{{ order.order_id }}')">Show Less</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    function toggleOrderDetails(orderId) {
+        var orderDetails = document.getElementById('order-details-' + orderId);
+        orderDetails.classList.toggle('show');
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block title %}Product Detail - {{ product.title }}{% endblock title %}
+
+{% block alert_message %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block main-content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-6">
+            <div id="product-images-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{{ product.product_image.url }}" class="d-block w-100" alt="{{ product.title }}">
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#product-images-carousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#product-images-carousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="mb-3">{{ product.title }}</h2>
+                    <p>{{ product.description }}</p>
+                    <h3 class="mb-3">Price: ₹{{ product.discount_price }}</h3> <!-- Added product price -->
+                    <div class="mb-3 d-flex justify-content-between">
+                        <form id="add-to-wishlist-form" action="{% url 'add_to_wishlist' product.id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="product-id" value="{{ product.id }}">
+                            <button class="btn btn-outline-danger" id="add-to-wishlist" type="submit">
+                                <i class="fas fa-heart me-1"></i>
+                                Add to Wishlist
+                            </button>
+                        </form>
+                        <form method="POST" action="{% url 'add_to_Cart' product.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        </form>
+                        <!-- <button class="btn btn-success">Buy Now</button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main-content %}
+
+{% block scripts %}
+<script>
+    document.getElementById('add-to-wishlist').addEventListener('click', function() {
+        var productId = '{{ product.id }}';
+        addToWishlist(productId);
+    });
+
+    function addToWishlist(productId) {
+        fetch('{% url 'add_to_wishlist' 0 %}'.replace('0', productId), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Item added to wishlist');
+            } else {
+                console.error('Failed to add item to wishlist');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+{% endblock scripts %}

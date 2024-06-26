@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Initiate Payment</title>
+</head>
+<body>
+    <h1>Make a Payment</h1>
+    <form method="post" action="{% url 'initiate_payment' order_id %}">
+        {% csrf_token %}
+        <label for="amount">Amount:</label>
+        <input type="number" name="amount" value="{{ grand_total }}" required readonly>
+        <button type="submit">Pay</button>
+    </form>
+</body>
+</html>

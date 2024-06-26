@@ -1,0 +1,114 @@
+{% extends "app/base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Profile{% endblock title %}
+
+{% block main-content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Profile Information -->
+            <div class="address-section">
+                <button class="btn btn-secondary" onclick="toggleForm()">Profile</button>
+            </div>
+            <!-- Add your profile information here -->
+        </div>
+        <div class="col-md-6">
+            <!-- Address Button -->
+            <div class="address-section">
+                <button class="btn btn-secondary" onclick="toggleAddress()">View Address</button>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="formSection" style="display: none;">
+        <div class="col-md-12">
+            <!-- Form -->
+            {% if customer %}
+  <!-- Display customer data using a card -->
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">User Information</h5>
+      <p class="card-text">Name: {{ customer.name }}</p>
+      <p class="card-text">Locality: {{ customer.locality }}</p>
+      <p class="card-text">City: {{ customer.city }}</p>
+      <p class="card-text">Mobile: {{ customer.mobile }}</p>
+      <p class="card-text">Zipcode: {{ customer.zipcode }}</p>
+      <p class="card-text">State: {{ customer.state }}</p>
+      <!-- Add more customer fields here as needed -->
+    </div>
+    <a href="{% url 'edit_profile' customer.id %}" class="btn btn-primary">Edit Profile</a>
+  </div>
+{% else %}
+  <!-- Display form for new customer registration -->
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="id_name" class="form-label">Name</label>
+      {{ form.name }}
+    </div>
+    <div class="mb-3">
+      <label for="id_locality" class="form-label">Locality</label>
+      {{ form.locality }}
+    </div>
+    <div class="mb-3">
+      <label for="id_city" class="form-label">City</label>
+      {{ form.city }}
+    </div>
+    <div class="mb-3">
+      <label for="id_mobile" class="form-label">Mobile</label>
+      {{ form.mobile }}
+    </div>
+    <div class="mb-3">
+      <label for="id_zipcode" class="form-label">Zipcode</label>
+      {{ form.zipcode }}
+    </div>
+    <div class="mb-3">
+      <label for="id_state" class="form-label">State</label>
+      {{ form.state }}
+    </div>
+    <!-- Add more form fields here as needed -->
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+{% endif %}
+        </div>
+    </div>
+    <div class="row" id="addressSection" style="display: none;">
+        <div class="col-md-12">
+            <!-- Display Address -->
+            {% if customer %}
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Your Address</h5>
+              <p class="card-text">Locality: {{ customer.locality }}</p>
+              <p class="card-text">City: {{ customer.city }}</p>
+              <p class="card-text">Mobile: {{ customer.mobile }}</p>
+              <p class="card-text">Zipcode: {{ customer.zipcode }}</p>
+              <p class="card-text">State: {{ customer.state }}</p>
+              <!-- Add more customer fields here as needed -->
+            </div>
+          </div>
+        {% else %}
+          <p>No profile data available.</p>
+        {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleForm() {
+        document.getElementById("formSection").style.display = "block";
+        document.getElementById("addressSection").style.display = "none";
+    }
+
+    function toggleAddress() {
+        document.getElementById("formSection").style.display = "none";
+        document.getElementById("addressSection").style.display = "block";
+    }
+</script>
+
+<br>
+{% endblock main-content %}
+
+
+

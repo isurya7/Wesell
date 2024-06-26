@@ -1,0 +1,129 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block title %}Checkout{% endblock title %}
+
+{% block main-content %}
+<style>
+    .small-image {
+        width: 100px;
+        height: auto;
+    }
+    .checkout-heading {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: #343a40;
+    }
+    .order-summary {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    .order-summary h2 {
+        margin-bottom: 15px;
+    }
+    .order-items {
+        list-style-type: none;
+        padding: 0;
+    }
+    .order-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 15px;
+    }
+    .product-image-container {
+        flex: 0 0 100px;
+    }
+    .product-info {
+        margin-left: 15px;
+    }
+    .product-title {
+        font-weight: bold;
+    }
+    .shipping-form-container {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-heading {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        font-weight: bold;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1 class="checkout-heading">CHECKOUT</h1>
+            <div class="order-summary">
+                <h2>Order Summary</h2>
+                <ul class="order-items">
+                    {% for item in cart_items %}
+                        <li class="order-item">
+                            <div class="product-image-container">
+                                <img src="{{ item.product.product_image.url }}" alt="{{ item.product.title }}" class="product-image small-image">
+                            </div>
+                            <div class="product-info">
+                                <p class="product-title">{{ item.product.title }}</p>
+                                <p class="product-size">Size: {{ item.size }}</p>
+                                <p class="product-quantity">Quantity: {{ item.quantity }}</p>
+                                <p class="product-price">Price: ₹{{ item.product.discount_price }}</p>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="delivery-charge">
+                    <p><strong>Delivery Charge:</strong> ₹80</p>
+                </div>
+                <p class="total-price"><strong>Total: ₹{{ grand_total }}</strong></p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="shipping-form-container">
+                <h2 class="form-heading">Shipping Details</h2>
+                <form id="payment-form" action="{% url 'checkout' %}" method="POST">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="form-group">
+                        <label for="id_number">Mobile:</label>
+                        {{ form.number }}
+                        {{ form.number.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_address">Address:</label>
+                        {{ form.address }}
+                        {{ form.address.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_pincode">Pincode:</label>
+                        {{ form.pincode }}
+                        {{ form.pincode.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_state">State:</label>
+                        {{ form.state }}
+                        {{ form.state.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_mode_of_payment">Payment Method:</label>
+                        {{ form.mode_of_payment }}
+                        {{ form.mode_of_payment.errors }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main-content %}

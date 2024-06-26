@@ -1,0 +1,33 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block title %}Login{% endblock title %}
+
+{% block main-content %}
+<div class="container mt-4 mb-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Login</h2>
+                    <form action="{% url 'login' %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username" class="form-group mb-2">Username:</label>
+                            <input type="text" id="username" name="username" class="form-control mb-3" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="form-group mb-2">Password:</label>
+                            <input type="password" id="password" name="password" class="form-control mb-3" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    </form>
+                    {% comment %} <p class="text-center mt-3"><a href="{% url "forgot_password" %}">Forgot Password?</a></p> {% endcomment %}
+                    <p class="text-center mt-3">Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main-content %}
+

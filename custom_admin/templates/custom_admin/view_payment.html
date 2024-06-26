@@ -1,0 +1,27 @@
+{% extends 'custom_admin/base.html' %}
+
+{% block content %}
+<h1>Payments</h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>User</th>
+        <th>Amount</th>
+        <th>Razorpay Order ID</th>
+        <th>Razorpay Payment Status</th>
+        <th>Razorpay Payment ID</th>
+        <th>Paid</th>
+    </tr>
+    {% for payment in payments %}
+    <tr>
+        <td>{{ payment.id }}</td>
+        <td>{{ payment.user.username }}</td>
+        <td>{{ payment.amount }}</td>
+        <td>{{ payment.razorpay_order_id }}</td>
+        <td>{{ payment.razorpay_payment_status }}</td>
+        <td>{{ payment.razorpay_payment_id }}</td>
+        <td>{{ payment.paid }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

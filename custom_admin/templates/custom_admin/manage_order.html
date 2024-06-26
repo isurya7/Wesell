@@ -1,0 +1,57 @@
+{% extends 'custom_admin/base.html' %}
+
+{% block content %}
+<h1>Manage Orders</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <th>Order ID</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Size</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Pincode</th>
+            <th>State</th>
+            <th>Total Amount</th>
+            <th>Payment</th>
+            <th>Time of Order</th>
+            <th>Order State</th>
+            <th>Change Order State</th>
+            <th>Delete Order</th>
+        </tr>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.order_id }}</td>
+            <td>{{ order.product.title }}</td>
+            <td>{{ order.quantity }}</td>
+            <td>{{ order.size }}</td>
+            <td>{{ order.user.username }}</td>
+            <td>{{ order.address }}</td>
+            <td>{{ order.pincode }}</td>
+            <td>{{ order.state }}</td>
+            <td>{{ order.total_amount }}</td>
+            <td>{{ order.mode_of_payment }}</td>
+            <td>{{ order.added_at }}</td>
+            <td>{{ order.order_state }}</td>
+            <td>
+                <select name="order_status_{{ order.id }}">
+                    {% for state_value, state_name in order_state_choices %}
+                    <option value="{{ state_value }}" {% if order.order_state == state_value %}selected{% endif %}>{{ state_name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <a href="{% url 'admin_delete_order' order.id %}" onclick="return confirm('Are you sure you want to delete this order?');">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+            </td>
+        </tr>
+        </tr>
+        {% endfor %}
+    </table>
+    <button type="submit">Save Changes</button>
+</form>
+{% endblock %}

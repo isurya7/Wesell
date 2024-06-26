@@ -1,0 +1,55 @@
+<!-- wishlist.html -->
+{% extends "app/base.html" %}
+{% block title %}Wishlist | Wesell{% endblock title %}
+{% block main-content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4">My Wishlist</h1>
+    {% if wishlist_items %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in wishlist_items %}
+                <tr>
+                    <td><img src="{{ item.product.product_image.url }}" alt="{{ item.product.title }}" style="max-width: 100px;"></td>
+                    <td>{{ item.product.title }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>₹{{ item.get_item_price }}</td>
+                    <td>
+                        <form action="{% url 'remove_from_wishlist' item.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="3">Total</td>
+                    <td>₹{{ total_price }}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <form method="post" action="{% url 'wishlist_to_cart' %}">
+            {% csrf_token %}
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <button type="submit" class="btn btn-primary">Add All to Cart</button>
+        </form>
+    </div>      
+    {% else %}
+    <div class="text-center">
+        <p class="fs-5 text-muted">Your wishlist is empty.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock main-content %}

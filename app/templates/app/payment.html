@@ -1,0 +1,66 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block title %}Payment{% endblock title %}
+
+{% block main-content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Payment</h1>
+            <p>Please complete the payment to proceed.</p>
+            <p>Total Amount: ₹{{ grand_total }}</p>
+            <div id="rzp-button-container"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "{{ razorpay_key_id }}", // Enter the Key ID generated from the Dashboard
+        "amount": "{{ amount_in_paise }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 means 50000 paise or Rs 500.
+        "currency": "INR",
+        "name": "Your Company Name",
+        "description": "Test Transaction",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{ razorpay_order_id }}", // This is a sample Order ID. Pass the `id` obtained in the previous step
+        "handler": function (response){
+            fetch('/payment/success/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature
+                })
+            }).then(res => res.json()).then(data => {
+                if (data.status === 'success') {
+                    window.location.href = 'app/order.html/';  // Redirect to orders page or success page
+                } else {
+                    alert('Payment verification failed');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('Payment verification failed');
+            });
+        },
+        "prefill": {
+            "name": "{{ user.username }}",
+            "email": "{{ user.email }}",
+            "contact": "{{ user.profile.phone_number }}"  // Adjust according to your user model
+        },
+        "notes": {
+            "address": "Razorpay Corporate Office"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+</script>
+{% endblock main-content %}

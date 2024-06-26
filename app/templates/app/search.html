@@ -1,0 +1,73 @@
+<!-- search.html -->
+{% extends 'app/base.html' %}
+
+{% block main-content %}
+<div class="container">
+    <h1>Search results for "{{ query }}"</h1>
+</div>
+
+{% load humanize %}
+
+<style>
+    .card {
+        transition: transform 0.3s, box-shadow 0.3s;
+        height: 100%; /* Ensure equal card height */
+    }
+
+    .card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+    }
+
+    .cut-symbol {
+        text-decoration: line-through;
+    }
+
+    .card-body {
+        margin-top: 10px; /* Add gap between image and card body */
+    }
+
+    .card-text {
+        margin-bottom: 10px; /* Add gap between description and prices */
+    }
+</style>
+
+<div class="container">
+    {% if results %}
+        <div class="row">
+            {% for product in results %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <a href="{% url 'product_detail' product.id %}"> <!-- Replace 'product_detail' with your actual view name -->
+                            <img src="{{ product.product_image.url }}" class="card-img-top" alt="{{ product.title }}">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.title }}</h5>
+                            <p class="card-text">{{ product.description }}</p>
+                            <p class="card-text">
+                                Selling Price: <span class="cut-symbol">₹{{ product.selling_price|intcomma }}</span>
+                            </p>
+                            {% if product.discount_price %}
+                                <p class="card-text">Discount Price: <strong>₹{{ product.discount_price|intcomma }}</strong></p>
+                            {% endif %}
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <form action="{% url 'add_to_Cart' product.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm">Add to cart</button>
+                                </form>
+                                <form action="{% url 'add_to_wishlist' product.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm">Add to Wishlist</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+</div>
+
+{% endblock main-content%}
