@@ -4,7 +4,9 @@ charset-normalizer==3.3.2
 Django==5.0.6
 django-crispy-forms==2.1
 django-environ==0.11.2
+gunicorn==22.0.0
 idna==3.7
+packaging==24.1
 pillow==10.2.0
 psycopg2==2.9.9
 razorpay==1.4.2
