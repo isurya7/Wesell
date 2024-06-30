@@ -29,7 +29,7 @@ if env_file.exists():
 SECRET_KEY = env('DJANGO_SECRET_KEY', default='your-default-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG')
+DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost','127.0.0.1','wesell.up.railway.app',])
 CSRF_TRUSTED_ORIGIN = ['https://wesell.up.railway.app']
